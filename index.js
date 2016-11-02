@@ -59,6 +59,15 @@ router.route('/measurements')
       }
     })
   })
+  .get((req, res) => {
+    Measurement.find((err, measurements) => {
+      if (err) {
+        res.status(500).json({message: 'Error reading from database'})
+      } else {
+        res.status(200).json(measurements)
+      }
+    })
+  })
 
 
 
