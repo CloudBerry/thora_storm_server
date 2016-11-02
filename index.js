@@ -4,6 +4,12 @@ var express = require('express')
 var expressValidator = require('express-validator')
 var Measurement = require('./models/measurement')
 var mongoose = require('mongoose')
+var url = require('./dbconfig.js')
+
+/* dbconfig.js contains database url:
+const url = 'mongodb://...'
+module.exports = url
+*/
 
 var app = express()
 
@@ -15,9 +21,6 @@ app.use(expressValidator())
 
 var port = process.env.PORT || 8080;
 var router = express.Router();
-
-
-
 
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
@@ -40,7 +43,21 @@ router.route('/measurements')
       return
     }
     //TODO: Insert into db
-    res.status(200).json({message: 'Success!'})
+    let measurement = new Measurement()
+    measurement.time = Date.now()
+    measurement.temp = req.body.temp
+    measurement.hum = req.body.hum
+    measurement.co2 = req.body.co2
+    measurement.dust = req.body.dust
+
+    measurement.save((err) => {
+      if (err) {
+        console.log(err)
+        res.status(500).json({message: 'Error saving data'})
+      } else {
+        res.status(200).json({message: 'Record inserted'})
+      }
+    })
   })
 
 
@@ -51,3 +68,4 @@ router.route('/measurements')
 app.use('/api', router);
 app.listen(port);
 console.log('Server listening on ' + port);
+mongoose.connect(url)

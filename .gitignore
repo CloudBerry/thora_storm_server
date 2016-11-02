@@ -1,6 +1,6 @@
 
 # Created by https://www.gitignore.io/api/macos,linux,node
-
+dbconfig.js
 ### macOS ###
 *.DS_Store
 .AppleDouble
