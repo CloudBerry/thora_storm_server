@@ -22,3 +22,42 @@ module.exports = url
 ```
 
 **index.js** contains the server code. 
+
+## Access Points
+
+Here are the currently supported access points for the API (all data is returned in JSON format):
+
+#### /api/measurements/
+
+**GET:** Returns all measurements stored in the database
+
+**POST:** Send a new measurement to the database. Make sure the post request has the following form encoded parameters (all are numbers):
+
+* temp
+* hum
+* co2
+* dust
+
+#### /api/measurements/last/hour
+
+**GET:** Returns all measurements recorded the last hour
+
+#### /api/measurements/last/day
+
+**GET:** Returns all measurements recorded the last 24 hours
+
+#### /api/measurements/last/week
+
+**GET:** Returns all measurements recorded the last week
+
+#### /api/measurements/last/month
+
+**GET:** Returns all measurements recorded the last month
+
+#### /api/measurements/last/year
+
+**GET:** Returns all measurements recorded the last year
+
+## Contact
+
+If you have any questions regarding the software, contact Espen Meidell \<espen.meidell@gmail.com\>
