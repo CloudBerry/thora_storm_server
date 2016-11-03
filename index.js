@@ -39,7 +39,7 @@ router.route('/measurements')
     req.checkBody('co2', 'Invalid postparam').notEmpty().isFloat()
     req.checkBody('dust', 'Invalid postparam').notEmpty().isFloat()
     if (req.validationErrors()) {
-      res.status(400).json({message: 'Invalid post parameter(s)'})
+      res.status(422).json({message: 'Invalid post parameter(s)'})
       return
     }
     //TODO: Insert into db
@@ -55,7 +55,7 @@ router.route('/measurements')
         console.log(err)
         res.status(500).json({message: 'Error saving data'})
       } else {
-        res.status(200).json({message: 'Record inserted'})
+        res.status(201).json({message: 'Record inserted'})
       }
     })
   })
@@ -67,6 +67,41 @@ router.route('/measurements')
         res.status(200).json(measurements)
       }
     })
+  })
+
+router.route('/measurements/last/:period')
+  .get((req, res) => {
+    let timelimit = Date.now()
+    switch (req.params.period) {
+      case 'hour':
+        timelimit -= 3600000
+        break
+      case 'day':
+        timelimit -= 86400000
+        break
+      case 'week':
+        timelimit -= 604800000
+        break
+      case 'month':
+        timelimit -= 2419200000
+        break
+      case 'year':
+        timelimit -= 29030400000
+        break
+      default:
+        res.status(404).json({message: "404 Not Found"})
+        return
+    }
+
+    Measurement.find().where('time').gte(timelimit).exec((err, measurements) => {
+      if (err) {
+        res.status(500).json({message: 'Error reading from database'})
+      } else {
+        res.status(200).json(measurements)
+      }
+    })
+
+
   })
 
 
